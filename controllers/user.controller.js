@@ -1,13 +1,12 @@
 const User = require("../models/user.model");
 
-const getUserData = (req, res) => {
-  //NOTE req.user.id come from token
-  console.log("req.user.id in getUserData function is ", req.user.id);
+const getUserData = async (req, res) => {
+  const id = req.user.id;
   try {
-    const user = User.findOne({ id: req.user.id });
+    const user = await User.findOne({ _id: id }, {password: 0});
     res.json(user);
   } catch (err) {
-    res.status(500).send("Server getUserData is error ");
+    res.status(500).send("Server getUserData is error ", err);
   }
 };
 

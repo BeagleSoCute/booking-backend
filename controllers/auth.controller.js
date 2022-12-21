@@ -5,7 +5,7 @@ const { validationResult } = require("express-validator");
 const config = require("config");
 
 const register = async (req, res) => {
-  const errors = validationResult(req);
+  const errors = validationResult(req); 
   const isError = !errors.isEmpty();
   if (isError) {
     return res.status(400).json({ errors: errors.array() });
@@ -46,7 +46,6 @@ const login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ errors: [{ msg: "Invalid password" }] });
     }
-
     const payload = {
       user: {
         id: user.id,
