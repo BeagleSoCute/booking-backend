@@ -3,9 +3,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const config = require("config");
+const uuid = require("uuid");
 
 const register = async (req, res) => {
-  const errors = validationResult(req); 
+  const errors = validationResult(req);
   const isError = !errors.isEmpty();
   if (isError) {
     return res.status(400).json({ errors: errors.array() });
@@ -31,6 +32,7 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
+  console.log("login workkkkkk");
   const errors = validationResult(req);
   const isError = !errors.isEmpty();
   if (isError) {
@@ -51,17 +53,38 @@ const login = async (req, res) => {
         id: user.id,
       },
     };
-    jwt.sign(
-      payload,
-      config.get("jwtSecret"),
-      { expiresIn: 36000 },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token });
+    const reFreshRandom = uuid.v4();
+    const access_token = jwt.sign(payload, config.get("jwtSecret"), {
+      expiresIn: 36000,
+    });
+    const refresh_token = jwt.sign(
+      { payload: reFreshRandom },
+      config.get("jwtRefreshSecret"),
+      {
+        expiresIn: 36000,
       }
     );
+    const isAuth = true;
+    res.cookie("access_token", access_token, { httpOnly: true, secure: true });
+    res.cookie("refresh_token", refresh_token, {
+      httpOnly: true,
+      secure: true,
+    });
+    res.cookie("isAuth", isAuth, { httpOnly: false, secure: true });
+    res.send("Cookies are set");
   } catch (err) {
-    console.log("error", err);
+    res.status(500).send("Server login is error ");
+  }
+};
+
+const logout = (req, res) => {
+  try {
+    console.log("logout on server");
+    res.cookie("access_token", "", { httpOnly: true, secure: true });
+    res.cookie("refresh_token", "", { httpOnly: true, secure: true });
+    res.cookie("isAuth", false, { httpOnly: false, secure: true });
+    res.send("Cookies are removed");
+  } catch (err) {
     res.status(500).send("Server login is error ");
   }
 };
@@ -69,4 +92,5 @@ const login = async (req, res) => {
 module.exports = {
   register,
   login,
+  logout,
 };
