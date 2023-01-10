@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const config = require("config");
+const { clearCookies } = require("../services/cookie.service");
 
 const authMiddleware = async (req, res, next) => {
   const token = req.cookies.access_token;
@@ -9,14 +10,24 @@ const authMiddleware = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, config.get("jwtSecret"));
     req.user = decoded.user;
-    console.log("user is ", req.user);
     next();
   } catch (err) {
     res.status(401).json({ msg: "Token is not valid" });
   }
 };
-const clearToken = (req, res, next) => {};
+const refreshTokenMiddleware = (req, res, next) => {
+  const token = req.cookies.refresh_token;
+  try {
+    const decoded = jwt.verify(token, config.get("jwtRefreshSecret"));
+    req.user = decoded.user;
+    next();
+  } catch (err) {
+    clearCookies(res);
+    res.status(403).json({ msg: "Refresh token is not valid" });
+  }
+};
 
 module.exports = {
   authMiddleware,
+  refreshTokenMiddleware,
 };

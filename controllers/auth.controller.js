@@ -3,7 +3,14 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const config = require("config");
-const uuid = require("uuid");
+const expireToken = config.get("tokenExpire");
+const expireRefreshToken = config.get("refreshTokenExpire");
+const tokenSecret = config.get("jwtSecret");
+const { clearCookies } = require("../services/cookie.service");
+const {
+  cookieHttpOnlyConfigs,
+  cookieNotHttpOnlyConfigs,
+} = require("../settings/cookies.setting");
 
 const register = async (req, res) => {
   const errors = validationResult(req);
@@ -30,9 +37,7 @@ const register = async (req, res) => {
     res.status(500).send("Server register is error ");
   }
 };
-
 const login = async (req, res) => {
-  console.log("login workkkkkk");
   const errors = validationResult(req);
   const isError = !errors.isEmpty();
   if (isError) {
@@ -53,44 +58,45 @@ const login = async (req, res) => {
         id: user.id,
       },
     };
-    const reFreshRandom = uuid.v4();
-    const access_token = jwt.sign(payload, config.get("jwtSecret"), {
-      expiresIn: 36000,
+    const access_token = jwt.sign(payload, tokenSecret, {
+      expiresIn: expireToken,
     });
-    const refresh_token = jwt.sign(
-      { payload: reFreshRandom },
-      config.get("jwtRefreshSecret"),
-      {
-        expiresIn: 36000,
-      }
-    );
+    const refresh_token = jwt.sign(payload, config.get("jwtRefreshSecret"), {
+      expiresIn: expireRefreshToken,
+    });
     const isAuth = true;
-    res.cookie("access_token", access_token, { httpOnly: true, secure: true });
-    res.cookie("refresh_token", refresh_token, {
-      httpOnly: true,
-      secure: true,
-    });
-    res.cookie("isAuth", isAuth, { httpOnly: false, secure: true });
+    res.cookie("access_token", access_token, cookieHttpOnlyConfigs);
+    res.cookie("refresh_token", refresh_token, cookieHttpOnlyConfigs);
+    res.cookie("isAuth", isAuth, cookieNotHttpOnlyConfigs);
     res.send("Cookies are set");
   } catch (err) {
     res.status(500).send("Server login is error ");
   }
 };
-
 const logout = (req, res) => {
+  clearCookies(res);
   try {
-    console.log("logout on server");
-    res.cookie("access_token", "", { httpOnly: true, secure: true });
-    res.cookie("refresh_token", "", { httpOnly: true, secure: true });
-    res.cookie("isAuth", false, { httpOnly: false, secure: true });
     res.send("Cookies are removed");
   } catch (err) {
     res.status(500).send("Server login is error ");
   }
+};
+const refreshToken = (req, res) => {
+  const payload = {
+    user: {
+      id: req.user.id,
+    },
+  };
+  const newToken = jwt.sign(payload, tokenSecret, {
+    expiresIn: expireToken,
+  });
+  res.cookie("access_token", newToken, cookieHttpOnlyConfigs);
+  res.send("New access token is set");
 };
 
 module.exports = {
   register,
   login,
   logout,
+  refreshToken,
 };
