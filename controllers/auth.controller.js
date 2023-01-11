@@ -22,7 +22,7 @@ const register = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (user) {
-      return res.status(400).json({ errors: "This email is already exist!" });
+      return res.status(400).json({ error: {msg:"This email is already exist!"} });
     }
     newUser = new User({
       email,
@@ -47,11 +47,11 @@ const login = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ errors: { msg: "Invalid user" } });
+      return res.status(400).json({ error: { msg: "Invalid user" } });
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ errors: [{ msg: "Invalid password" }] });
+      return res.status(400).json({ error: { msg: "Invalid password" } });
     }
     const payload = {
       user: {
