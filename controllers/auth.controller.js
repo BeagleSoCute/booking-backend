@@ -5,13 +5,14 @@ const { validationResult } = require("express-validator");
 const config = require("config");
 const expireToken = config.get("tokenExpire");
 const expireRefreshToken = config.get("refreshTokenExpire");
+const expireRememberRefresh = config.get("rememberRefreshTokenExpire");
 const tokenSecret = config.get("jwtSecret");
 const { clearCookies } = require("../services/cookie.service");
 const {
   cookieHttpOnlyConfigs,
   cookieNotHttpOnlyConfigs,
 } = require("../settings/cookies.setting");
-
+const { cookiesExpired } = require("../constants/cookies");
 const register = async (req, res) => {
   const errors = validationResult(req);
   const isError = !errors.isEmpty();
@@ -22,7 +23,9 @@ const register = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (user) {
-      return res.status(400).json({ error: {msg:"This email is already exist!"} });
+      return res
+        .status(400)
+        .json({ error: { msg: "This email is already exist!" } });
     }
     newUser = new User({
       email,
@@ -43,7 +46,7 @@ const login = async (req, res) => {
   if (isError) {
     return res.status(400).json({ errors: errors.array() });
   }
-  const { email, password } = req.body;
+  const { email, password, remember } = req.body;
   try {
     const user = await User.findOne({ email });
     if (!user) {
@@ -62,12 +65,21 @@ const login = async (req, res) => {
       expiresIn: expireToken,
     });
     const refresh_token = jwt.sign(payload, config.get("jwtRefreshSecret"), {
-      expiresIn: expireRefreshToken,
+      expiresIn: remember ? expireRememberRefresh : expireRefreshToken,
     });
     const isAuth = true;
-    res.cookie("access_token", access_token, cookieHttpOnlyConfigs);
-    res.cookie("refresh_token", refresh_token, cookieHttpOnlyConfigs);
-    res.cookie("isAuth", isAuth, cookieNotHttpOnlyConfigs);
+    res.cookie("access_token", access_token, {
+      ...cookieHttpOnlyConfigs,
+      maxAge: cookiesExpired,
+    });
+    res.cookie("refresh_token", refresh_token, {
+      ...cookieHttpOnlyConfigs,
+      maxAge: cookiesExpired,
+    });
+    res.cookie("isAuth", isAuth, {
+      ...cookieNotHttpOnlyConfigs,
+      maxAge: cookiesExpired,
+    });
     res.send("Cookies are set");
   } catch (err) {
     res.status(500).send("Server login is error ");
@@ -90,7 +102,10 @@ const refreshToken = (req, res) => {
   const newToken = jwt.sign(payload, tokenSecret, {
     expiresIn: expireToken,
   });
-  res.cookie("access_token", newToken, cookieHttpOnlyConfigs);
+  res.cookie("access_token", newToken, {
+    ...cookieHttpOnlyConfigs,
+    maxAge: cookiesExpired,
+  });
   res.send("New access token is set");
 };
 

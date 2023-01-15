@@ -3,7 +3,8 @@
     "jwtSecret": "MYNAMEisToffeeBirdAndBeagleEve31513423684028412+124131/SF/wfeไำดำๆำดฟกหดฟดafe",
     "jwtRefreshSecret" :"BeagleSoCutesdakpeafkdm;cmdEarthafesgkpeaokfnandEvesfpaeofpakdfd@==_@",
     "tokenExpire":"10m", 
-    "refreshTokenExpire":"1h"
+    "refreshTokenExpire":"1h",
+    "rememberRefreshTokenExpire":"30d"
 }
 
 

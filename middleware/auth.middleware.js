@@ -3,7 +3,7 @@ const config = require("config");
 const { clearCookies } = require("../services/cookie.service");
 
 const authMiddleware = async (req, res, next) => {
-  const token = req.cookies.access_token;
+  const token = await req.cookies.access_token;
   if (!token) {
     return res.status(401).json({ msg: "No token, authorization denined" });
   }
@@ -15,8 +15,8 @@ const authMiddleware = async (req, res, next) => {
     res.status(401).json({ msg: "Token is not valid" });
   }
 };
-const refreshTokenMiddleware = (req, res, next) => {
-  const token = req.cookies.refresh_token;
+const refreshTokenMiddleware = async (req, res, next) => {
+  const token = await req.cookies.refresh_token;
   try {
     const decoded = jwt.verify(token, config.get("jwtRefreshSecret"));
     req.user = decoded.user;
