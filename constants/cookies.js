@@ -1,4 +1,4 @@
-const cookiesExpired = 60 * 60 * 24 * 40;
+const cookiesExpired = 1000 * 60 * 60 * 24 * 31;
 
 module.exports = {
   cookiesExpired,
