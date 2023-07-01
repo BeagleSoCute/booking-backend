@@ -16,6 +16,10 @@ const validateRegister = [
     min: 3,
     max: 15,
   }),
+  check(
+    "phoneNumber",
+    "Please enter  your phonenumber"
+  ).notEmpty(),
 ];
 
 module.exports = { validateRegister };

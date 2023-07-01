@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema;
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -11,10 +12,22 @@ const userSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  phoneNumber: {
+    type: String,
+    required: true,
+  },
   password: {
     type: String,
     minlength: 6,
     required: true,
+  },
+  role:{
+    type: String,
+    required: true,
+  },
+   booking: {
+    type: ObjectId,
+    ref: "booking",
   },
 });
 
