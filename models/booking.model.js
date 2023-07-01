@@ -17,36 +17,41 @@ const bookingSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  babyAmount:{
+  babyAmount: {
     type: Number,
   },
   specification: {
     type: String,
-
   },
   order: {
-    foodLists: [
+    food: [
       {
-        food: {
-          type: ObjectId,
-          ref: "food",
+        name: {
+          type: String,
+          required: true,
+        },
+        meat: {
+          type: String,
+          required: true,
         },
         amount: {
           type: Number,
+          required: true,
         },
         specification: {
           type: String,
         },
       },
     ],
-    drinkLists: [
+    drink: [
       {
-        drink: {
-          type: ObjectId,
-          ref: "drink",
+        name: {
+          type: String,
+          required: true,
         },
         amount: {
           type: Number,
+          required: true,
         },
         specification: {
           type: String,

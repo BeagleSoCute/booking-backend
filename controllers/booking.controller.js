@@ -47,8 +47,23 @@ const getBookingById = async (req, res) => {
   }
 }
 
+const updateOrderBookingById = async (req, res) => {
+  const {bookingId ,food, drink} = req.body
+  console.log('bookingId',bookingId);
+  console.log('food',food)
+  console.log('drink',drink)
+
+  try {
+  await Booking.findOneAndUpdate({_id:bookingId}, { $set: { order:{food, drink} } })
+    res.status(200).send("Update order booking successfully.");
+  } catch (error) {
+    console.log("error in updateOrderBookingById api", error);
+    res.status(500).send("Server getOrderById Error");
+  }
+}
 module.exports = {
   addBooking,
   getBooking,
   getBookingById,
+  updateOrderBookingById
 };
