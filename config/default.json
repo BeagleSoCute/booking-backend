@@ -1,0 +1,8 @@
+{
+    "mongoURI": "mongodb://booking-web:8lrGz61XJFPgNO6r9NW7Tqd3f3YFBIUIZopL3iOH8GzXGhW7sJrAoik5qI1586SHl1xzdNb9NrJOACDbvyd0zg==@booking-web.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@booking-web@", 
+    "jwtSecret": "MYNAMEisToffeeBirdAndBeagleEve31513423684028412+124131/SF/wfeไำดำๆำดฟกหดฟดafe",
+    "jwtRefreshSecret" :"BeagleSoCutesdakpeafkdm;cmdEarthafesgkpeaokfnandEvesfpaeofpakdfd@==_@",
+    "tokenExpire":"10m", 
+    "refreshTokenExpire":"1h",
+    "rememberRefreshTokenExpire":"30d"
+}
