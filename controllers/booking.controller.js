@@ -22,7 +22,7 @@ const getBooking = async (req, res) => {
 const id = req.user.id;
   try {
     let bookingDetails
-    const thisUser = await User.findOne({user:id});
+    const thisUser = await User.findOne({_id:id});
     if(thisUser.role === "admin"){
       bookingDetails = await Booking.find().populate('user', 'name email phoneNumber')   
     }else{
@@ -49,21 +49,41 @@ const getBookingById = async (req, res) => {
 
 const updateOrderBookingById = async (req, res) => {
   const {bookingId ,food, drink} = req.body
-  console.log('bookingId',bookingId);
-  console.log('food',food)
-  console.log('drink',drink)
-
   try {
   await Booking.findOneAndUpdate({_id:bookingId}, { $set: { order:{food, drink} } })
     res.status(200).send("Update order booking successfully.");
   } catch (error) {
     console.log("error in updateOrderBookingById api", error);
-    res.status(500).send("Server getOrderById Error");
+    res.status(500).send("Server updateOrderBookingById Error");
   }
 }
+
+const updateBookingById = async (req, res) => {
+  const {adultAmount, babyAmount, dateTime, specification, bookingId} = req.body
+  try {
+  await Booking.findOneAndUpdate({_id:bookingId}, { $set: { adultAmount, babyAmount, dateTime, specification } })
+    res.status(200).send("Update order booking successfully.");
+  } catch (error) {
+    console.log("error in updateOrderBookingById api", error);
+    res.status(500).send("Server updateBookingById Error");
+  }
+}
+const deleteBookingById = async (req, res) => {
+  const {bookingId} = req.params
+  try {
+    await Booking.findOneAndDelete({ _id: bookingId });
+    res.status(200).send("Delete order booking successfully.");
+  } catch (error) {
+    console.log("error in deleteBookingById API", error);
+    res.status(500).send("Server deleteBookingById Error");
+  }
+}
+
 module.exports = {
   addBooking,
   getBooking,
   getBookingById,
-  updateOrderBookingById
+  updateOrderBookingById,
+  updateBookingById, 
+  deleteBookingById
 };
