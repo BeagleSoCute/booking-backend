@@ -63,27 +63,48 @@ const login = async (req, res) => {
         id: user.id,
       },
     };
-    const access_token = jwt.sign(payload, tokenSecret, {
-      expiresIn: expireToken,
-    });
-    const refresh_token = jwt.sign(payload, config.get("jwtRefreshSecret"), {
-      expiresIn: remember ? expireRememberRefresh : expireRefreshToken,
-    });
-    const isAuth = true;
-    res.cookie("access_token", access_token, {
-      ...cookieHttpOnlyConfigs,
-      maxAge: cookiesExpired,
-    });
-    res.cookie("refresh_token", refresh_token, {
-      ...cookieHttpOnlyConfigs,
-      maxAge: cookiesExpired,
-    });
-    res.cookie("isAuth", isAuth, {
-      ...cookieNotHttpOnlyConfigs,
-      maxAge: cookiesExpired,
-    });
-    res.send("Cookies are set");
+// console.log('above authen')
+//     jwt.sign(payload, config.get('jwtSecret'),  {expiresIn: 36000}, (err, token) => {
+//       if (err) throw err;
+//       jwt.sign(payload, config.get('jwtRefreshSecret'), refreshTokenOptions, {expiresIn:expireRefreshToken}, (err, refreshToken) => {
+//         if (err) throw err;
+//         res.json({ token, refreshToken });
+//       });
+//     });
+
+    jwt.sign(
+      payload,
+      config.get('jwtSecret'),
+      {expiresIn: 36000},
+      // Callback 
+      (err,token) => {
+          if(err) throw err; 
+          res.json({ token })
+      }
+  );
+
+    // const access_token = jwt.sign(payload, tokenSecret, {
+    //   expiresIn: expireToken,
+    // });
+    // const refresh_token = jwt.sign(payload, config.get("jwtRefreshSecret"), {
+    //   expiresIn: remember ? expireRememberRefresh : expireRefreshToken,
+    // });
+    // const isAuth = true;
+    // res.cookie("access_token", access_token, {
+    //   ...cookieHttpOnlyConfigs,
+    //   maxAge: cookiesExpired,
+    // });
+    // res.cookie("refresh_token", refresh_token, {
+    //   ...cookieHttpOnlyConfigs,
+    //   maxAge: cookiesExpired,
+    // });
+    // res.cookie("isAuth", isAuth, {
+    //   ...cookieNotHttpOnlyConfigs,
+    //   maxAge: cookiesExpired,
+    // });
+    // res.send("Cookies are set");
   } catch (err) {
+    console.log('error server login', err)
     res.status(500).send("Server login is error ");
   }
 };
