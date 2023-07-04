@@ -1,11 +1,14 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const app = express();
-const port = 5000;
 const user = require("./routes/user.route");
 const auth = require("./routes/auth.route");
 const booking = require("./routes/booking.route");
 const product = require("./routes/product.route");
+require("dotenv").config();
+
+const port = process.env.PORT || 5000;
+
 const cookieParser = require('cookie-parser')
 app.use(express.json({ extended: false })); //NOTE Allow us to read the request.body
 app.use(cookieParser());
