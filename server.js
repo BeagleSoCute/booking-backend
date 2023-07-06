@@ -17,9 +17,10 @@ const port = process.env.PORT || 5000;
 
 
 var whitelist = [
+  "https://booking-frontend.azurewebsites.net",
   "http://localhost:3000",
   "localhost:3000",
-  "https://booking-frontend.azurewebsites.net",
+  "https://aws-deploy.d5355usn3brkv.amplifyapp.com"
 ]; //white list consumers
 var corsOptions = {
   origin: function (origin, callback) {
