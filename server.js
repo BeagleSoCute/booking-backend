@@ -8,7 +8,7 @@ const booking = require("./routes/booking.route");
 const product = require("./routes/product.route");
 require("dotenv").config();
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4000;
 
 // app.use(cors({
 //   origin: 'https://booking-frontend.azurewebsites.net' // specify the allowed origin(s) here
@@ -59,5 +59,5 @@ app.use("/api/product", product);
 
 //NOTE listen to function to make our server application listen to client requests
 app.listen(port, () => {
-  console.log("Server is running on port " + port);
+  console.log("Server is running on port (latest aws) " + port);
 });
