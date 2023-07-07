@@ -41,6 +41,7 @@ var corsOptions = {
     "Access-Control-Allow-Origin",
     "Origin",
     "Accept",
+    "x-auth-token"
   ],
 };
 
@@ -59,5 +60,5 @@ app.use("/api/product", product);
 
 //NOTE listen to function to make our server application listen to client requests
 app.listen(port, () => {
-  console.log("Server is running on port (latest aws) " + port);
+  console.log("Server is running on port (update CORS) " + port);
 });
