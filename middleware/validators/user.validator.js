@@ -11,10 +11,10 @@ const validateRegister = [
   }),
   check(
     "name",
-    "Please enter more than 3 characters of your name and not more than 15 character"
+    "Please enter more than 1 characters of your name and not more than 150 character"
   ).isLength({
-    min: 3,
-    max: 15,
+    min: 1,
+    max: 150,
   }),
   check(
     "phoneNumber",
