@@ -8,12 +8,7 @@ const booking = require("./routes/booking.route");
 const product = require("./routes/product.route");
 require("dotenv").config();
 
-const port = process.env.PORT || 4000;
-
-// app.use(cors({
-//   origin: 'https://booking-frontend.azurewebsites.net' // specify the allowed origin(s) here
-// }));
-
+const port = process.env.PORT || 5000;
 
 
 var whitelist = [
