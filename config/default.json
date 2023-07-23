@@ -1,8 +1,0 @@
-{
-    "mongoURI": "mongodb+srv://booking:123456Toffee@cluster0.n4sn0hf.mongodb.net/?retryWrites=true&w=majority", 
-    "jwtSecret": "MYNAMEisToffeeBirdAndBeagleEve31513423684028412+124131/SF/wfeไำดำๆำดฟกหดฟดafe",
-    "jwtRefreshSecret" :"BeagleSoCutesdakpeafkdm;cmdEarthafesgkpeaokfnandEvesfpaeofpakdfd@==_@",
-    "tokenExpire":"10m", 
-    "refreshTokenExpire":"1h",
-    "rememberRefreshTokenExpire":"30d"
-}
